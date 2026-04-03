@@ -10,9 +10,14 @@ datasource db {
 }
 
 model Category {
-  id       String    @id @default(uuid())
-  name     String
-  products Product[]
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique // Para URLs amigables
+  description String?   @db.Text
+  image       String?   // URL de la imagen (opcional)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Product {
@@ -39,6 +44,23 @@ model User {
   resetTokenExpires    DateTime?
   twoFactorEnabled     Boolean   @default(false)
   twoFactorSecret      String?   // Para el futuro MFA (Google Authenticator)
+
+  audit  AuditLog[]
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?  // Opcional por si quieres registrar quién lo hizo
+  userEmail   String?  // Útil para ver rápido quién fue sin hacer joins
+  action      String   // "CREATE", "UPDATE", "DELETE"
+  entity      String   // "CATEGORY", "PRODUCT", "USER"
+  entityId    String?  // ID del objeto afectado
+  entityName  String?  // Nombre del objeto (ej: "Ropa Deportiva") para lectura rápida
+  details     String?  @db.Text // JSON o texto con los cambios (ej: "Nombre cambiado de A a B")
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 enum Role {

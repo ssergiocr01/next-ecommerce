@@ -1,9 +1,20 @@
-import { Bell, Search, UserCircle, LogOut } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { getAuthUser } from "@/lib/actions/auth";
 import { UserMenu } from "./UserMenu"; 
 
-export const Navbar = async () => {
-  const user = await getAuthUser();
+// 1. Definimos la interfaz para que acepte la prop 'user' opcionalmente
+interface NavbarProps {
+  user?: {
+    name: string | null;
+    role: any;
+    email: string;
+  } | null;
+}
+
+// 2. Si no recibe 'user', lo busca por su cuenta
+export const Navbar = async ({ user: propUser }: NavbarProps) => {
+  // Si no pasamos el usuario por props (como en el layout normal), lo buscamos
+  const user = propUser || await getAuthUser();
 
   return (
     <header className="h-16 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-40">
@@ -24,9 +35,8 @@ export const Navbar = async () => {
         
         <div className="h-8 w-px bg-gray-200" />
 
-        {/* REEMPLAZAMOS EL BLOQUE ESTÁTICO POR ESTO */}
         <UserMenu 
-          name={user?.name || "Usuario"} 
+          name={user?.name || user?.email || "Usuario"} 
           role={user?.role || "USER"} 
         />
       </div>

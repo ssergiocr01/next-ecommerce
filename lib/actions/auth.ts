@@ -30,7 +30,7 @@ export async function registerAction(prevState: any, formData: FormData): Promis
         name,
         email,
         password: hashedPassword,
-        role: "ADMIN", // Ajustar según necesidad
+        role: "ADMIN", // Cambiar a "USER" según lógica de negocio
       },
     });
 
@@ -43,6 +43,7 @@ export async function registerAction(prevState: any, formData: FormData): Promis
 
 /**
  * INICIO DE SESIÓN
+ * Modificado para guardar un objeto JSON en la cookie (ID + ROLE)
  */
 export async function loginAction(prevState: any, formData: FormData): Promise<ActionResponse> {
   const email = formData.get("email") as string;
@@ -55,9 +56,16 @@ export async function loginAction(prevState: any, formData: FormData): Promise<A
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return { error: "Credenciales inválidas" };
 
+    // ✅ ESTRUCTURA PARA EL MIDDLEWARE: Guardamos ID y ROL
+    const sessionData = JSON.stringify({
+      id: user.id,
+      email: user.email,
+      role: user.role
+    });
+
     // Crear sesión con Cookies (Next.js 15 requiere await)
     const cookieStore = await cookies();
-    cookieStore.set("session", user.id, {
+    cookieStore.set("session", sessionData, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
@@ -72,7 +80,36 @@ export async function loginAction(prevState: any, formData: FormData): Promise<A
 }
 
 /**
- * CAMBIO DE CONTRASEÑA (Dentro del Perfil)
+ * OBTENER USUARIO AUTENTICADO (Para Navbar/Layouts)
+ * Adaptado para parsear el JSON de la cookie
+ */
+export async function getAuthUser() {
+  try {
+    const cookieStore = await cookies();
+    const sessionValue = cookieStore.get("session")?.value;
+
+    if (!sessionValue) return null;
+
+    // Parseamos el contenido de la cookie
+    const sessionData = JSON.parse(sessionValue);
+
+    const user = await prisma.user.findUnique({
+      where: { id: sessionData.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true
+      }
+    });
+    return user;
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * CAMBIO DE CONTRASEÑA
  */
 export async function changePasswordAction(prevState: any, formData: FormData): Promise<ActionResponse> {
   const currentPassword = formData.get("currentPassword") as string;
@@ -87,7 +124,6 @@ export async function changePasswordAction(prevState: any, formData: FormData): 
     const userAuth = await getAuthUser();
     if (!userAuth) return { error: "No autorizado" };
 
-    // Buscamos al usuario para obtener el hash actual
     const user = await prisma.user.findUnique({ where: { email: userAuth.email } });
     if (!user) return { error: "Usuario no encontrado" };
 
@@ -105,30 +141,6 @@ export async function changePasswordAction(prevState: any, formData: FormData): 
   } catch (error) {
     console.error("Error en Cambio de Password:", error);
     return { error: "Error al actualizar la contraseña" };
-  }
-}
-
-/**
- * OBTENER USUARIO AUTENTICADO (Para Navbar/Layouts)
- */
-export async function getAuthUser() {
-  try {
-    const cookieStore = await cookies();
-    const sessionId = cookieStore.get("session")?.value;
-
-    if (!sessionId) return null;
-
-    const user = await prisma.user.findUnique({
-      where: { id: sessionId },
-      select: { 
-        name: true, 
-        email: true, 
-        role: true 
-      }
-    });
-    return user;
-  } catch (error) {
-    return null;
   }
 }
 
