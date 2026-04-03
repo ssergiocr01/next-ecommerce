@@ -35,6 +35,10 @@ model User {
   password  String
   role      Role     @default(USER)
   createdAt DateTime @default(now())
+  resetToken           String?   @unique
+  resetTokenExpires    DateTime?
+  twoFactorEnabled     Boolean   @default(false)
+  twoFactorSecret      String?   // Para el futuro MFA (Google Authenticator)
 }
 
 enum Role {
