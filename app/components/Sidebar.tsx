@@ -1,6 +1,6 @@
 "use client" // Obligatorio para detectar la ruta actual
 
-import { LayoutDashboard, ShoppingBag, List, Users, Settings, Package, History } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, List, Users, Settings, Package, History, Tag,  } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -8,6 +8,7 @@ const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
     { name: "Productos", icon: Package, href: "/products" },
     { name: "Categorías", icon: List, href: "/categories" },
+    { name: "Marcas", icon: Tag, href: "/brands" },
     { name: "Ordenes", icon: ShoppingBag, href: "/orders" },
     { name: "Clientes", icon: Users, href: "/users" },
     { name: "Ajustes", icon: Settings, href: "/settings" },

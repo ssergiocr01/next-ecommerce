@@ -10,28 +10,41 @@ datasource db {
 }
 
 model Category {
-  id          String    @id @default(uuid())
+  id          String    @id @default(cuid())
   name        String    @unique
-  slug        String    @unique // Para URLs amigables
-  description String?   @db.Text
-  image       String?   // URL de la imagen (opcional)
+  slug        String    @unique
+  description String?
+  image       String?
+  products    Product[] // 👈 Relación inversa
+}
+
+model Brand {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  logo        String?   // URL del logo en Cloudinary
   products    Product[]
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 }
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String   @id @default(cuid())
   name        String
-  description String
-  price       Float
-  stock       Int
-  images      String[] // Array de URLs
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
+  slug        String   @unique
+  description String?  @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  stock       Int      @default(0)
+  images      String[]
+  categoryId  String   // 👈 Obligatorio
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  brandId     String
+  brand       Brand    @relation(fields: [brandId], references: [id])
 }
+
 
 model User {
   id        String   @id @default(uuid())
