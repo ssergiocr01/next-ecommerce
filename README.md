@@ -35,6 +35,17 @@ El proyecto utiliza **Route Groups** para separar las experiencias de usuario de
 - [x] **User Menu:** Menú desplegable interactivo para gestión de perfil y cierre de sesión.
 - [x] **Diseño Premium:** Estética moderna usando Tailwind CSS, Lucide Icons y animaciones.
 
+### 🔐 Seguridad y Auditoría Avanzada
+- [x] **Middleware de Protección:** Restricción de rutas por roles (`ADMIN` vs `USER`).
+- [x] **Bitácora de Movimientos (AuditLog):** Registro automático de acciones (Crear, Editar, Eliminar) con detalles técnicos.
+- [x] **Protección de Navegación:** Alertas preventivas para evitar pérdida de datos en formularios "sucios".
+- [x] **Manejo de Errores Pro:** Páginas 404 y 500 personalizadas integradas al Layout del Dashboard.
+
+### 📦 Gestión de Inventario (CRUD)
+- [x] **Módulo de Categorías:** Listado profesional con paginación técnica del lado del servidor.
+- [x] **Formularios Inteligentes:** Generación automática de Slugs en tiempo real y validación de duplicados.
+- [x] **Integridad de Datos:** Bloqueo de eliminación para categorías con productos vinculados.
+
 ## 🛠️ Configuración del Entorno
 
 ### 1. Requisitos Previos
