@@ -13,12 +13,27 @@ Sistema de comercio electrónico de alto rendimiento construido con el **App Rou
 
 ## 📂 Estructura de Carpetas (Arquitectura)
 
-El proyecto utiliza **Route Groups** para separar las experiencias de usuario sin afectar la limpieza de las URLs:
+El proyecto utiliza **Route Groups** para separar las experiencias de usuario de forma lógica y profesional:
 
-*   `(dashboard)`: Panel administrativo con Sidebar, Navbar y Footer persistentes.
-*   `(auth)`: Páginas de acceso (Login/Register) con layout independiente y limpio.
-*   `app/components`: Componentes globales reutilizables.
-*   `prisma`: Esquemas y migraciones de la base de datos.
+*   `app/(dashboard)`: Panel administrativo con Sidebar, Navbar y Footer persistentes.
+*   `app/(auth)`: Módulo de acceso (Login/Register/Recovery) con layout independiente.
+*   `app/components`: Componentes globales reutilizables (Sidebar, Navbar, UserMenu).
+*   `lib/actions`: Lógica de servidor (Server Actions) para autenticación y gestión de datos.
+*   `prisma`: Esquemas y migraciones de la base de datos PostgreSQL.
+
+## 📝 Características Implementadas
+
+### 🔐 Seguridad y Autenticación
+- [x] **Registro de Usuarios:** Encriptación de contraseñas con `bcryptjs`.
+- [x] **Login Profesional:** Validación segura contra base de datos y manejo de errores con `useActionState`.
+- [x] **Gestión de Sesiones:** Implementación de cookies seguras (`httpOnly`).
+- [x] **Seguridad de Cuenta:** Cambio de contraseña desde el perfil y cierre de sesión funcional.
+- [x] **Recuperación:** Interfaz de "Olvidé mi contraseña" preparada para tokens.
+
+### 🖥️ Interfaz de Usuario (UI/UX)
+- [x] **Dashboard Layout:** Diseño profesional con Sidebar dinámico y Navbar persistente.
+- [x] **User Menu:** Menú desplegable interactivo para gestión de perfil y cierre de sesión.
+- [x] **Diseño Premium:** Estética moderna usando Tailwind CSS, Lucide Icons y animaciones.
 
 ## 🛠️ Configuración del Entorno
 
