@@ -1,11 +1,26 @@
 "use client";
 
-import { useActionState } from "react";
+import { toast } from "sonner";
+import { useActionState, useEffect } from "react";
 import { changePasswordAction } from "@/lib/actions/auth";
 import { KeyRound, ShieldCheck, AlertCircle, Loader2, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ChangePasswordPage() {
   const [state, formAction, isPending] = useActionState(changePasswordAction, null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error);
+    }
+
+    if (state?.success) {
+      toast.success("Tu contraseña ha sido actualizada correctamente");
+      // Opcional: limpiar los campos del formulario aquí si usas refs
+    }
+  }, [state]);
+
 
   return (
     <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -36,10 +51,10 @@ export default function ChangePasswordPage() {
           <div className="grid grid-cols-1 gap-6">
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-slate-700 ml-1">Contraseña Actual</label>
-              <input 
-                name="currentPassword" 
-                type="password" 
-                required 
+              <input
+                name="currentPassword"
+                type="password"
+                required
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-600 focus:bg-white transition-all"
               />
             </div>
@@ -48,20 +63,20 @@ export default function ChangePasswordPage() {
 
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-slate-700 ml-1">Nueva Contraseña</label>
-              <input 
-                name="newPassword" 
-                type="password" 
-                required 
+              <input
+                name="newPassword"
+                type="password"
+                required
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-600 focus:bg-white transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-slate-700 ml-1">Confirmar Nueva Contraseña</label>
-              <input 
-                name="confirmPassword" 
-                type="password" 
-                required 
+              <input
+                name="confirmPassword"
+                type="password"
+                required
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-600 focus:bg-white transition-all"
               />
             </div>

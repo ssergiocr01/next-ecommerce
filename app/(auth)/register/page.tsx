@@ -1,12 +1,28 @@
 "use client";
 
-import { useActionState } from "react";
+import { toast } from "sonner";
+import { useActionState, useEffect } from "react";
 import { registerAction } from "@/lib/actions/auth";
 import { UserPlus, Mail, Lock, User, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState(registerAction, null);
+
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error);
+    }
+
+    if (state?.success) {
+      toast.success("¡Cuenta creada con éxito! Redirigiendo...");
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+    }
+  }, [state, router]);
 
   return (
     <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-700">

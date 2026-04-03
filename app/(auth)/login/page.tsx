@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useActionState, useEffect } from "react";
 import { loginAction } from "@/lib/actions/auth";
 import { LogIn, Mail, Lock, AlertCircle, Loader2 } from "lucide-react";
@@ -12,9 +13,14 @@ export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
 
   useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error);
+    }
+
     if (state?.success) {
-      router.push("/"); // Redirección forzada por el navegador
-      router.refresh(); // Refresca para que el layout del Dashboard cargue
+      toast.success("¡Inicio de sesión exitoso!");
+      router.push("/");
+      router.refresh(); // Crucial para actualizar el Navbar con tu nombre
     }
   }, [state, router]);
 
